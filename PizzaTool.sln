@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29911.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzaTool", "PizzaTool\PizzaTool.csproj", "{031F8189-9849-4ECE-B1BA-D10B48406774}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Infrastructure", "1. Infrastructure", "{59B99F43-1007-4150-9C3D-696ED06E03A9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Domain", "2. Domain", "{3FB2D7AA-DB26-4621-ABD2-8F2BAF64A194}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Host", "3. Host", "{6CABA16E-ADCF-4293-8A4E-77FF29E30C26}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{031F8189-9849-4ECE-B1BA-D10B48406774}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{031F8189-9849-4ECE-B1BA-D10B48406774}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{031F8189-9849-4ECE-B1BA-D10B48406774}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{031F8189-9849-4ECE-B1BA-D10B48406774}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {40E9EE84-5A4C-4813-86EF-4257E9EACFE1}
+	EndGlobalSection
+EndGlobal
