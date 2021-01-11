@@ -7,16 +7,18 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Pizza.Application.Assign;
 using Pizza.Application.Issue;
 using Pizza.Data.EF;
+using Pizza.Utilities.Exceptions;
 
-namespace PizzaTool
+namespace Pizza.BackendAPI
 {
     public class Startup
     {
@@ -63,7 +65,7 @@ namespace PizzaTool
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(5);//You can set Time   
-            });
+                });
 
             // Related Class Prevent
             services.AddControllersWithViews()
@@ -77,7 +79,7 @@ namespace PizzaTool
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                      builder =>
                                      {
-                                         builder.WithOrigins("http://localhost:55500",
+                                         builder.WithOrigins("http://localhost:5000",
                                                              "http://pizza-dev.fushan.fihnbb.com")
                                          .AllowAnyHeader()
                                          .AllowAnyOrigin()
@@ -97,14 +99,20 @@ namespace PizzaTool
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors();
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseSession();
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapControllers();
+                //endpoints.MapGet("/", async context =>
+                //{
+                //    await context.Response.WriteAsync("Hello World!");
+                //});
             });
         }
     }

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 
-namespace PizzaTool
+namespace Pizza.BackendAPI
 {
     public class Program
     {
