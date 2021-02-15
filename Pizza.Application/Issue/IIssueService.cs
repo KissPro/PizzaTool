@@ -10,6 +10,7 @@ namespace Pizza.Application.Issue
     {
         // Get information
         Task<List<TblIssue>> GetListIssue();
+        Task<List<TblProcess>> GetListProcess();
         // Create Issue
         Task<bool> CreateUpdateIssue(TblIssue issue);
 

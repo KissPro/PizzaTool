@@ -17,6 +17,7 @@ namespace Pizza.Data.EF
 
         public virtual DbSet<TblApproval> TblApproval { get; set; }
         public virtual DbSet<TblAssign> TblAssign { get; set; }
+        public virtual DbSet<TblExtendDeadline> TblExtendDeadLine { get; set; }
         public virtual DbSet<TblAudit> TblAudit { get; set; }
         public virtual DbSet<TblDropList> TblDropList { get; set; }
         public virtual DbSet<TblFile> TblFile { get; set; }
@@ -116,6 +117,28 @@ namespace Pizza.Data.EF
                     .HasConstraintName("FK_tbl_Assign_tbl_Issue");
             });
 
+            modelBuilder.Entity<TblExtendDeadline>(entity =>
+            {
+                entity.ToTable("tbl_ExtendDeadLine");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.ApprovalContent)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Reason)
+                      .HasMaxLength(200)
+                      .IsUnicode(false);
+                entity.Property(e => e.CurrentDeadLine).HasColumnType("datetime");
+                entity.Property(e => e.RequestDeadLine).HasColumnType("datetime");
+                entity.Property(e => e.ApprovalDate).HasColumnType("datetime");
+                entity.Property(e => e.RequestDate).HasColumnType("datetime");
+            });
+
+
             modelBuilder.Entity<TblAudit>(entity =>
             {
                 entity.ToTable("tbl_Audit");
@@ -178,18 +201,18 @@ namespace Pizza.Data.EF
 
                 entity.Property(e => e.CurrentStep)
                     .IsRequired()
-                    .HasMaxLength(20)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.IssueId).HasColumnName("IssueID");
 
-                entity.Property(e => e.Name).HasMaxLength(50);
+                entity.Property(e => e.Name).HasMaxLength(100);
 
                 entity.Property(e => e.Remark).HasMaxLength(200);
 
                 entity.Property(e => e.Type)
                     .IsRequired()
-                    .HasMaxLength(20);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.UploadedBy).HasMaxLength(50);
 
@@ -339,7 +362,7 @@ namespace Pizza.Data.EF
                     .HasColumnName("ID")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Custormer)
+                entity.Property(e => e.Customer)
                     .IsRequired()
                     .HasMaxLength(50);
 
@@ -360,7 +383,9 @@ namespace Pizza.Data.EF
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Ponno).HasColumnName("PONNo");
+                entity.Property(e => e.Ponno).HasColumnName("PONNo")
+                  .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Ponsize).HasColumnName("PONSize");
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +12,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Pizza.Application.Assign;
+using Pizza.Application.Config;
 using Pizza.Application.Issue;
 using Pizza.Data.EF;
 using Pizza.Utilities.Exceptions;
@@ -39,7 +43,8 @@ namespace Pizza.BackendAPI
 
             // Add service connection with database
             services.AddTransient<IIssueService, IssueService>();
-            //services.AddTransient<IAssignService, AssignService>();
+            services.AddTransient<IConfigService, ConfigService>();
+            services.AddTransient<IAssignService, AssignService>();
 
             // Authorize config
             services.AddAuthentication(options =>
@@ -79,7 +84,7 @@ namespace Pizza.BackendAPI
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                      builder =>
                                      {
-                                         builder.WithOrigins("http://localhost:5000",
+                                         builder.WithOrigins("http://localhost:55500",
                                                              "http://pizza-dev.fushan.fihnbb.com")
                                          .AllowAnyHeader()
                                          .AllowAnyOrigin()
@@ -98,8 +103,20 @@ namespace Pizza.BackendAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"UploadedFile")),
+                RequestPath = new PathString("/UploadedFile")
+            });
+            app.UseDirectoryBrowser(new DirectoryBrowserOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(Directory.GetCurrentDirectory(), "UploadedFile")),
+                RequestPath = "/UploadedFile"
+            });
 
-            app.UseCors();
+            app.UseCors(MyAllowSpecificOrigins);
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

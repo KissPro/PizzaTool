@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pizza.Data.EF;
 
 namespace Pizza.Data.Migrations
 {
     [DbContext(typeof(PizzaContext))]
-    partial class PizzaContextModelSnapshot : ModelSnapshot
+    [Migration("20210121031658_Update")]
+    partial class Update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -197,45 +199,6 @@ namespace Pizza.Data.Migrations
                     b.ToTable("tbl_DropList");
                 });
 
-            modelBuilder.Entity("Pizza.Data.EF.TblExtendDeadLine", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnName("ID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ApprovalContent")
-                        .HasColumnType("varchar(200)")
-                        .HasMaxLength(200)
-                        .IsUnicode(false);
-
-                    b.Property<DateTime>("ApprovalDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<Guid>("AssignNo")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CurrentDeadLine")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Reason")
-                        .HasColumnType("varchar(200)")
-                        .HasMaxLength(200)
-                        .IsUnicode(false);
-
-                    b.Property<DateTime>("RequestDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<DateTime>("RequestDeadLine")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("tbl_ExtendDeadLine");
-                });
-
             modelBuilder.Entity("Pizza.Data.EF.TblFile", b =>
                 {
                     b.Property<Guid>("Id")
@@ -244,8 +207,8 @@ namespace Pizza.Data.Migrations
 
                     b.Property<string>("CurrentStep")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50)
+                        .HasColumnType("varchar(20)")
+                        .HasMaxLength(20)
                         .IsUnicode(false);
 
                     b.Property<Guid>("IssueId")
@@ -253,8 +216,8 @@ namespace Pizza.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<string>("Remark")
                         .HasColumnType("nvarchar(200)")
@@ -262,8 +225,8 @@ namespace Pizza.Data.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
 
                     b.Property<string>("UploadedBy")
                         .HasColumnType("nvarchar(50)")
@@ -477,7 +440,7 @@ namespace Pizza.Data.Migrations
                         .HasColumnName("ID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Customer")
+                    b.Property<string>("Custormer")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);

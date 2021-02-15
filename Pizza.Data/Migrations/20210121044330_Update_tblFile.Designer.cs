@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pizza.Data.EF;
 
 namespace Pizza.Data.Migrations
 {
     [DbContext(typeof(PizzaContext))]
-    partial class PizzaContextModelSnapshot : ModelSnapshot
+    [Migration("20210121044330_Update_tblFile")]
+    partial class Update_tblFile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -195,45 +197,6 @@ namespace Pizza.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("tbl_DropList");
-                });
-
-            modelBuilder.Entity("Pizza.Data.EF.TblExtendDeadLine", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnName("ID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ApprovalContent")
-                        .HasColumnType("varchar(200)")
-                        .HasMaxLength(200)
-                        .IsUnicode(false);
-
-                    b.Property<DateTime>("ApprovalDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<Guid>("AssignNo")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CurrentDeadLine")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Reason")
-                        .HasColumnType("varchar(200)")
-                        .HasMaxLength(200)
-                        .IsUnicode(false);
-
-                    b.Property<DateTime>("RequestDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<DateTime>("RequestDeadLine")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("tbl_ExtendDeadLine");
                 });
 
             modelBuilder.Entity("Pizza.Data.EF.TblFile", b =>

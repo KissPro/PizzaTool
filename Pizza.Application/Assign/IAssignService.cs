@@ -8,7 +8,9 @@ namespace Pizza.Application.Assign
 {
     public interface IAssignService
     {
-        Task<bool> GetAssign();
+        Task<TblAssign> GetAssign(Guid assignId);
         Task<bool> InsertUpdateAssign(TblAssign assign);
+        Task<bool> InsertUpdateDeadline(TblExtendDeadline assign);
+        Task<List<TblExtendDeadline>> GetListDeadLineByAssignId(Guid assignId);
     }
 }
