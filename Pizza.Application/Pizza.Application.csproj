@@ -5,7 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Flurl.Http" Version="3.0.1" />
+    <PackageReference Include="Hangfire.Core" Version="1.7.19" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Pizza.Data\Pizza.Data.csproj" />
+    <ProjectReference Include="..\Pizza.Utilities\Pizza.Utilities.csproj" />
+    <ProjectReference Include="..\Pizza.ViewModel\Pizza.ViewModel.csproj" />
   </ItemGroup>
 
 </Project>

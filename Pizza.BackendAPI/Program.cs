@@ -41,7 +41,9 @@ namespace Pizza.BackendAPI
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder
+                    .UseStartup<Startup>();
+                    //.UseKestrel(x => x.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(2));
                 });
     }
 }

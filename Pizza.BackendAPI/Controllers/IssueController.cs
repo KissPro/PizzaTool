@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -13,6 +14,8 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 using Oracle.ManagedDataAccess.Client;
+using Pizza.Application.Approval;
+using Pizza.Application.Assign;
 using Pizza.Application.Issue;
 using Pizza.Data.EF;
 using Pizza.Utilities.Helper;
@@ -27,12 +30,15 @@ namespace Pizza.BackendAPI.Controllers
     {
         private IIssueService _issueService;
         public IConfiguration _configuration;
+        public IAssignService _assignService;
+        private IApprovalService _approvalService;
 
-
-        public IssueController(IIssueService issueService, IConfiguration configuration)
+        public IssueController(IIssueService issueService, IConfiguration configuration, IAssignService assignService, IApprovalService approvalService)
         {
             _issueService = issueService;
             _configuration = configuration;
+            _assignService = assignService;
+            _approvalService = approvalService;
         }
 
         #region Get Information
@@ -40,7 +46,7 @@ namespace Pizza.BackendAPI.Controllers
         public async Task<IActionResult> GetImeiInformation([FromRoute]string imei)
         {
             DataTable dt = new DataTable();
-            using (var conn = new OracleConnection(_configuration["ConnectionStrings:IFuse"]))
+            using (var conn = new OracleConnection(_configuration["ConnectionStrings:iFusePRO"]))
             {
                 conn.Open();
                 Log.Information("Open ifuse connection string");
@@ -58,10 +64,13 @@ namespace Pizza.BackendAPI.Controllers
                                                        a.WORK_ORDER as PONNo,
                                                        b.TARGET_QTY as PONSize,
                                                        a.Model_Name as SPCode,
-                                                       a.LINE as Line,
-                                                       a.In_Station_Time as Shift
-                                                   from  sfc_wip_tracking a inner join SFC_WO_INFO b on a.WORK_ORDER = b.wo_no
-                                                   where a.PID = (select PID from sfc_wip_sn_ex where sn_value = '" + imei.Trim() + @"')
+                                                       b.LINE as Line,
+                                                       c.FIRST_IN_STATION as Shift
+                                                   from  sfc_wip_tracking a 
+                                                         inner join SFC_WO_INFO b on a.WORK_ORDER = b.wo_no
+                                                         left join sfc_wip_station_rec c on a.PID = c.PID
+                                                         where a.PID = (select PID from sfc_wip_sn_ex where sn_value ='" + imei.Trim() + @"')
+                                                         and c.GROUP_NAME = 'LB'
                                                    ) s
                                                 on p.PID = s.PID
                                                 and p.sn_name = 'IMEI'
@@ -76,15 +85,43 @@ namespace Pizza.BackendAPI.Controllers
             return Ok(dt);
         }
 
-        [HttpGet("all")]
-        public async Task<IActionResult> GetAllListIssue() 
+        //[HttpGet("all")]
+        //public async Task<IActionResult> GetAllListIssue()
+        //{
+        //    var listIssue = await _issueService.GetListIssue(null, null);
+        //    return Ok(listIssue);
+        //}
+
+        [HttpGet("get-issue/{issueId}")]
+        public async Task<IActionResult> GetIssueById([FromRoute]Guid issueId)
         {
-            var listIssue = await _issueService.GetListIssue();
+            var issue = await _issueService.GetIssueById(issueId);
+            return Ok(issue);
+        }
+
+        [HttpGet("get-verification-issueId/{issueId}")]
+        public async Task<IActionResult> GetListVerificationByIssueId([FromRoute]Guid issueId)
+        {
+            var issue = await _issueService.GetListVerificationByIssueId(issueId);
+            return Ok(issue);
+        }
+
+        [HttpGet("list-issue-issueNo/{issueNo}")]
+        public async Task<IActionResult> GetListIssueByIssueNo([FromRoute]string issueNo)
+        {
+            var listIssue = await _issueService.GetListIssueByIssueNo(issueNo);
             return Ok(listIssue);
         }
-    
+
+        [HttpGet("list-issue-issueTitle/{issueTitle}")]
+        public async Task<IActionResult> GetListIssueByIssueTitle([FromRoute]string issueTitle)
+        {
+            var listIssue = await _issueService.GetListIssueByIssueTitle(issueTitle);
+            return Ok(listIssue);
+        }
+
         [HttpPost("list-issue")]
-        [Authorize(Roles = UserRoles.Admin)]
+        //[Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> GetListIssue([FromBody]DTParameterModel dtParameters)
         {
             if (!ModelState.IsValid)
@@ -94,7 +131,7 @@ namespace Pizza.BackendAPI.Controllers
             var searchBy = dtParameters.Search?.Value;
 
             // if we have an empty search then just order the results by Id ascending
-            var orderCriteria = "Delivery";
+            var orderCriteria = "CreatedDate";
             var orderAscendingDirection = true;
 
             if (dtParameters.Order != null)
@@ -104,7 +141,12 @@ namespace Pizza.BackendAPI.Controllers
                 orderAscendingDirection = dtParameters.Order.FirstOrDefault().Dir.ToString().ToLower() == "asc";
             }
 
-            IQueryable<TblIssue> list = (await _issueService.GetListIssue()).AsQueryable();
+            var checkList = await _issueService.GetListIssue(dtParameters.From, dtParameters.To);
+            if (checkList == null)
+            {
+                return Ok(null);
+            }
+            IQueryable<TblIssue> list = (checkList).AsQueryable();
             var totalResultsCount = list.Count();
 
             // filter
@@ -213,6 +255,36 @@ namespace Pizza.BackendAPI.Controllers
             var listProcess = await _issueService.GetListProcess();
             return Ok(listProcess);
         }
+        [HttpGet("list-file-issueId/{issueId}")]
+        public async Task<IActionResult> GetListFileByIssueId([FromRoute]Guid issueId)
+        {
+            var listFile = await _issueService.GetListFileByIssueId(issueId);
+            return Ok(listFile);
+        }
+        [HttpGet("oba/{issueId}")]
+        public async Task<IActionResult> GetOBAByIssueId([FromRoute]Guid issueId)
+        {
+            var oba = await _issueService.GetOBAByIssueId(issueId);
+            return Ok(oba);
+        }
+        [HttpGet("product/{issueId}")]
+        public async Task<IActionResult> GetProductByIssueId([FromRoute]Guid issueId)
+        {
+            var product = await _issueService.GetProductByIssueId(issueId);
+            return Ok(product);
+        }
+        [HttpGet("process-name/{processName}")]
+        public async Task<IActionResult> GetProcessByName([FromRoute]string processName)
+        {
+            var process = await _issueService.GetProcessByName(processName);
+            return Ok(process);
+        }
+        [HttpGet("list-verify-issueId/{issueId}")]
+        public async Task<IActionResult> GetVerifyFileByIssueId([FromRoute]Guid issueId)
+        {
+            var listVerify = await _issueService.GetListVerificationByIssueId(issueId);
+            return Ok(listVerify);
+        }
 
         #endregion
         #region Create Information
@@ -241,7 +313,51 @@ namespace Pizza.BackendAPI.Controllers
             var result = await _issueService.CreateFile(file);
             return Ok(result);
         }
+
+        [HttpPost("create-verification")]
+        public async Task<IActionResult> CreateVerification([FromBody]TblVerification verification)
+        {
+            var result = await _issueService.CreateVerificationTable(verification);
+            return Ok(result);
+        }
         #endregion
+
+        [Authorize(Roles = UserRoles.Admin)]
+        [HttpDelete("remove-issue-id/{issueId}/{type}")]
+        public async Task<IActionResult> RemoveIssue([FromRoute]Guid issueId, [FromRoute]string type)
+        {
+            bool check = true;
+            if (type == "OBA")
+            {
+                check = await _issueService.RemoveOBAByIssueId(issueId);
+                check = await _issueService.RemoveProductByIssueId(issueId);
+                check = await _issueService.RemoveVerificationByIssueId(issueId);
+            }
+            check = await _issueService.RemoveFileByIssueId(issueId);
+            check = await _assignService.RemoveAssignByIssueId(issueId);
+            check = await _approvalService.RemoveApprovalByIssueId(issueId);
+            check = await _issueService.RemoveIssueById(issueId);
+            return Ok(check);
+        }
+        [HttpDelete("remove-file-id/{fileId}")]
+        public async Task<IActionResult> RemoveFile([FromRoute]Guid fileId)
+        {
+            var result = await _issueService.RemoveFileById(fileId);
+            return Ok(result);
+        }
+
+        [HttpDelete("remove-file-issueId/{issueId}")]
+        public async Task<IActionResult> RemoveFileIssueId([FromRoute]Guid issueId)
+        {
+            var result = await _issueService.RemoveFileByIssueId(issueId);
+            return Ok(result);
+        }
+        [HttpDelete("remove-verification-id/{id}")]
+        public async Task<IActionResult> RemoveVerificationId([FromRoute]Guid id)
+        {
+            var result = await _issueService.RemoveVerificationById(id);
+            return Ok(result);
+        }
     }
 
 }

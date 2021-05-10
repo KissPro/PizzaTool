@@ -9,7 +9,10 @@ namespace Pizza.Application.Config
     public interface IConfigService
     {
         Task<List<TblDropList>> GetDropListByName(string name);
+        Task<List<TblDropList>> GetAll();
 
-        Task<bool> AddDropList(TblDropList dropList);
+        Task<bool> AddConfig(TblDropList dropList);
+
+        Task<bool> RemoveConfig(Guid id);
     }
 }

@@ -243,5 +243,8 @@ namespace Pizza.ViewModel.Common
         /// Collection of all columns in the table
         /// </summary>
         public IEnumerable<DtColumn> Columns { get; set; }
+
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
     }
 }

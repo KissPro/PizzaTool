@@ -8,7 +8,10 @@ namespace Pizza.Application.Approval
 {
     public interface IApprovalService
     {
-        Task<bool> GetApproval();
+        Task<TblApproval> GetApprovalById(Guid id);
+        Task<List<TblApproval>> GetListApprovalByIssueId(Guid issueId);
         Task<bool> InsertUpdateApproval(TblApproval approval);
+        Task<bool> RemoveApprovalById(Guid id);
+        Task<bool> RemoveApprovalByIssueId(Guid IssueId);
     }
 }

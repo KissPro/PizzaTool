@@ -33,10 +33,14 @@ namespace Pizza.Data.EF
         public string StepStatus { get; set; }
         public string ContainmentAction { get; set; }
         public string AnalysisDetail { get; set; }
+        public DateTime? SampleReceivingTime { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public string CreatedBy { get; set; }
         public string RecommendedAction { get; set; }
         public string EscapeCause { get; set; }
         public string Capadetail { get; set; }
         public string VerifyNote { get; set; }
+        public string CreateByName { get; set; }
 
         public virtual ICollection<TblApproval> TblApproval { get; set; }
         public virtual ICollection<TblAssign> TblAssign { get; set; }

@@ -17,15 +17,46 @@ namespace Pizza.Application.Config
             _context = context;
         }
 
-        public Task<bool> AddDropList(TblDropList dropList)
+        public async Task<bool> AddConfig(TblDropList config)
         {
-            throw new NotImplementedException();
+            var check = _context.TblDropList.FirstOrDefault(x => x.Id == config.Id);
+            if (check == null)
+            {
+                _context.TblDropList.Add(config);
+            }
+            else
+            {
+                check.Name = config.Name;
+                check.Value = config.Value;
+                check.UpdatedBy = config.UpdatedBy;
+                check.UpdateDate = DateTime.Now;
+            }
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<List<TblDropList>> GetAll()
+        {
+            var res = await _context.TblDropList.ToListAsync();
+            return res;
         }
 
         public async Task<List<TblDropList>> GetDropListByName(string name)
         {
             var res = await _context.TblDropList.Where(x => x.Name == name).ToListAsync();
             return res;
+        }
+
+        public async Task<bool> RemoveConfig(Guid id)
+        {
+            var check = _context.TblDropList.FirstOrDefault(x => x.Id == id);
+            if (check != null)
+            {
+                _context.TblDropList.Remove(check);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }

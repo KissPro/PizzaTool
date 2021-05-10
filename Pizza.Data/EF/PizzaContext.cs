@@ -34,7 +34,8 @@ namespace Pizza.Data.EF
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("data source=HVNN0606\\SQLEXPRESS;initial catalog=Pizza;user id=sa;password=123;MultipleActiveResultSets=True;");
+                //optionsBuilder.UseSqlServer("data source=HVNN0606\\SQLEXPRESS;initial catalog=Pizza;user id=sa;password=123;MultipleActiveResultSets=True;");
+                optionsBuilder.UseSqlServer("data source=hvlappsdb02-dev;initial catalog=Pizza;user id=imes;password=jan2015;MultipleActiveResultSets=True;");
             }
         }
 
@@ -85,6 +86,7 @@ namespace Pizza.Data.EF
                     .IsUnicode(false);
 
                 entity.Property(e => e.AssignedDate).HasColumnType("datetime");
+                entity.Property(e => e.ActionDate).HasColumnType("datetime");
 
                 entity.Property(e => e.CurrentStep)
                     .IsRequired()
@@ -105,7 +107,7 @@ namespace Pizza.Data.EF
                     .IsUnicode(false);
 
                 entity.Property(e => e.Team).HasMaxLength(100);
-
+                entity.Property(e => e.ScheduleDeadLine).HasMaxLength(200);
                 entity.Property(e => e.UpdatedBy).HasMaxLength(50);
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
@@ -124,14 +126,10 @@ namespace Pizza.Data.EF
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
                     .ValueGeneratedNever();
-
                 entity.Property(e => e.ApprovalContent)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
+                    .HasMaxLength(200);
                 entity.Property(e => e.Reason)
-                      .HasMaxLength(200)
-                      .IsUnicode(false);
+                      .HasMaxLength(200);
                 entity.Property(e => e.CurrentDeadLine).HasColumnType("datetime");
                 entity.Property(e => e.RequestDeadLine).HasColumnType("datetime");
                 entity.Property(e => e.ApprovalDate).HasColumnType("datetime");
@@ -256,7 +254,9 @@ namespace Pizza.Data.EF
                     .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);
-
+                entity.Property(e => e.SampleReceivingTime).HasColumnType("datetime");
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+                entity.Property(e => e.CreatedBy).HasMaxLength(50);
                 entity.Property(e => e.NotifiedList).HasMaxLength(500);
 
                 entity.Property(e => e.Rpn).HasColumnName("RPN");
@@ -342,6 +342,11 @@ namespace Pizza.Data.EF
                     .IsRequired()
                     .HasMaxLength(100);
 
+                entity.Property(e => e.ApproverId_Lv1)
+                 .HasMaxLength(30);
+                entity.Property(e => e.ApproverId_Lv2)
+                 .HasMaxLength(30);
+
                 entity.Property(e => e.ProcessRemark).HasMaxLength(100);
 
                 entity.Property(e => e.RefTable)
@@ -363,7 +368,6 @@ namespace Pizza.Data.EF
                     .ValueGeneratedNever();
 
                 entity.Property(e => e.Customer)
-                    .IsRequired()
                     .HasMaxLength(50);
 
                 entity.Property(e => e.Imei)
@@ -375,7 +379,6 @@ namespace Pizza.Data.EF
                 entity.Property(e => e.IssueId).HasColumnName("IssueID");
 
                 entity.Property(e => e.Line)
-                    .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
@@ -390,21 +393,17 @@ namespace Pizza.Data.EF
                 entity.Property(e => e.Ponsize).HasColumnName("PONSize");
 
                 entity.Property(e => e.Product)
-                    .IsRequired()
                     .HasMaxLength(50);
 
                 entity.Property(e => e.Psn)
-                    .IsRequired()
                     .HasColumnName("PSN")
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Shift)
-                    .IsRequired()
                     .HasMaxLength(20);
 
                 entity.Property(e => e.Spcode)
-                    .IsRequired()
                     .HasColumnName("SPCode")
                     .HasMaxLength(20)
                     .IsUnicode(false);

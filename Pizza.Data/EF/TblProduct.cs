@@ -12,7 +12,7 @@ namespace Pizza.Data.EF
         public string Product { get; set; }
         public string Psn { get; set; }
         public string Ponno { get; set; }
-        public int Ponsize { get; set; }
+        public int? Ponsize { get; set; }
         public string Spcode { get; set; }
         public string Line { get; set; }
         public string Pattern { get; set; }

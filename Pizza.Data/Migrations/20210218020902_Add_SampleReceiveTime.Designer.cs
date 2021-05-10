@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pizza.Data.EF;
 
 namespace Pizza.Data.Migrations
 {
     [DbContext(typeof(PizzaContext))]
-    partial class PizzaContextModelSnapshot : ModelSnapshot
+    [Migration("20210218020902_Add_SampleReceiveTime")]
+    partial class Add_SampleReceiveTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,10 +116,6 @@ namespace Pizza.Data.Migrations
                     b.Property<string>("RequestContent")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ScheduleDeadLine")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
 
                     b.Property<string>("Status")
                         .HasColumnType("varchar(20)")
@@ -311,16 +309,6 @@ namespace Pizza.Data.Migrations
                     b.Property<string>("ContainmentAction")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CreateByName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime");
-
                     b.Property<string>("CurrentStep")
                         .IsRequired()
                         .HasColumnType("varchar(20)")
@@ -468,14 +456,6 @@ namespace Pizza.Data.Migrations
                         .HasColumnName("ID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ApproverId_Lv1")
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
-                    b.Property<string>("ApproverId_Lv2")
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
                     b.Property<string>("ProcessName")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)")
@@ -510,6 +490,7 @@ namespace Pizza.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Customer")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
@@ -525,6 +506,7 @@ namespace Pizza.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Line")
+                        .IsRequired()
                         .HasColumnType("varchar(20)")
                         .HasMaxLength(20)
                         .IsUnicode(false);
@@ -540,25 +522,29 @@ namespace Pizza.Data.Migrations
                         .HasMaxLength(50)
                         .IsUnicode(false);
 
-                    b.Property<int?>("Ponsize")
+                    b.Property<int>("Ponsize")
                         .HasColumnName("PONSize")
                         .HasColumnType("int");
 
                     b.Property<string>("Product")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("Psn")
+                        .IsRequired()
                         .HasColumnName("PSN")
                         .HasColumnType("varchar(20)")
                         .HasMaxLength(20)
                         .IsUnicode(false);
 
                     b.Property<string>("Shift")
+                        .IsRequired()
                         .HasColumnType("nvarchar(20)")
                         .HasMaxLength(20);
 
                     b.Property<string>("Spcode")
+                        .IsRequired()
                         .HasColumnName("SPCode")
                         .HasColumnType("varchar(20)")
                         .HasMaxLength(20)

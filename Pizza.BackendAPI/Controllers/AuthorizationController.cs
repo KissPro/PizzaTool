@@ -52,7 +52,7 @@ namespace Pizza.BackendAPI.Controllers
                 var token = new JwtSecurityToken(
                     issuer: _configuration["JWT:ValidIssuer"],
                     audience: _configuration["JWT:ValidAudience"],
-                    expires: DateTime.Now.AddHours(3),
+                    expires: DateTime.UtcNow.AddDays(10),
                     claims: authClaims,
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     );
@@ -71,7 +71,6 @@ namespace Pizza.BackendAPI.Controllers
     }
     public static class UserRoles
     {
-        public const string Admin = "Hanoi_NBB_COO_ADMIN";
-        public const string User = "Hanoi_NBB_Pizza_USER";
+        public const string Admin = "Hanoi_NBB_PIZZA_ADMIN";
     }
 }

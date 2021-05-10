@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pizza.Data.EF;
 
 namespace Pizza.Data.Migrations
 {
     [DbContext(typeof(PizzaContext))]
-    partial class PizzaContextModelSnapshot : ModelSnapshot
+    [Migration("20210407135617_update_tbl_product_ponsize_2")]
+    partial class update_tbl_product_ponsize_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -309,9 +311,6 @@ namespace Pizza.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContainmentAction")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreateByName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")

@@ -13,6 +13,7 @@ namespace Pizza.Data.EF
         public string ApprovalContent { get; set; }
         public string Status { get; set; }
         public DateTime RequestDate { get; set; }
-        public DateTime ApprovalDate { get; set; }
+        public DateTime? ApprovalDate { get; set; }
     }
 }
+

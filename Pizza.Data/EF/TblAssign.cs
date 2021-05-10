@@ -10,12 +10,18 @@ namespace Pizza.Data.EF
         public string CurrentStep { get; set; }
         public string Team { get; set; }
         public string OwnerId { get; set; }
+
+        public string Name { get; set; }
+        public string Email { get; set; }
         public string RequestContent { get; set; }
         public string ActionResult { get; set; }
         public string ActionContent { get; set; }
+        
+        public DateTime? ActionDate { get; set; }
         public DateTime AssignedDate { get; set; }
         public DateTime DeadLine { get; set; }
         public int? DeadLevel { get; set; }
+        public string ScheduleDeadLine { get; set; }
         public string Status { get; set; }
         public string Remark { get; set; }
         public string UpdatedBy { get; set; }

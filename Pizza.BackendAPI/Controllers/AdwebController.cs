@@ -63,8 +63,8 @@ namespace Pizza.BackendAPI.Controllers
         }
 
         #region Get detail user information
-        [HttpGet("user-detail-id/{accessToken}/{empId}")]
-        public IActionResult GetUserDetailByID(string accessToken, string empId)
+        [HttpGet("user-id/{accessToken}/{Id}")]
+        public IActionResult GetUserDetailByID(string accessToken, string Id) // Id(in adweb) != Employee Id
         {
 
             var res = (ADWeb_URI + URI_ADWEB_SEARCH)
@@ -73,7 +73,7 @@ namespace Pizza.BackendAPI.Controllers
                {
                    model = "hr.employee",
                    fields = "[\"id\", \"name\",\"ad_user_employeeID\", \"ad_user_displayName\", \"work_email\", \"job_title\", \"ad_user_sAMAccountName\", \"parent_id\", \"department_id\"]",
-                   search_datas = "[('ad_user_employeeID', '=', '" + empId + "')]"
+                   search_datas = "[('id', 'ilike', '" + Id + "')]"
                })
                .GetStringAsync().Result;
 
@@ -97,7 +97,48 @@ namespace Pizza.BackendAPI.Controllers
                     };
                     return Ok(_obj);
                 }
-                return Ok(data[1].data[0][0]);
+                var temp = JsonConvert.DeserializeObject<EmployeeModel>(data[1].data[0][0].ToString());
+                return Ok(temp);
+            }
+            return Ok(null);
+        }
+
+        [HttpGet("user-detail-id/{accessToken}/{empId}")]
+        public IActionResult GetUserDetailByEmployeeID(string accessToken, string empId)
+        {
+
+            var res = (ADWeb_URI + URI_ADWEB_SEARCH)
+               .WithOAuthBearerToken(accessToken)
+               .SetQueryParams(new
+               {
+                   model = "hr.employee",
+                   fields = "[\"id\", \"name\",\"ad_user_employeeID\", \"ad_user_displayName\", \"work_email\", \"job_title\", \"ad_user_sAMAccountName\", \"parent_id\", \"department_id\"]",
+                   search_datas = "[('ad_user_employeeID', 'ilike', '" + empId + "')]"
+               })
+               .GetStringAsync().Result;
+
+            var data = JsonConvert.DeserializeObject<List<CommonModel>>(res);
+            if (data.Count == 2 && data[1].data != null && data[1].data.Count > 0)
+            {
+                dynamic _data = data[1].data[0][0];
+                if (_data.job_title == "Head of Factory")
+                {
+                    var _obj = new EmployeeModel
+                    {
+                        id = _data.id,
+                        name = _data.name,
+                        ad_user_displayName = _data.ad_user_displayName,
+                        ad_user_employeeID = _data.ad_user_employeeID,
+                        ad_user_sAMAccountName = _data.ad_user_sAMAccountName,
+                        job_title = _data.job_title,
+                        work_email = _data.work_email,
+                        department_id = new List<object> { "0", "Fushan Factory" },
+                        parent_id = new List<object> { _data.id, _data.ad_user_displayName },
+                    };
+                    return Ok(_obj);
+                }
+                var temp = JsonConvert.DeserializeObject<EmployeeModel>(data[1].data[0][0].ToString());
+                return Ok(temp);
             }
             return Ok(null);
         }
@@ -112,7 +153,7 @@ namespace Pizza.BackendAPI.Controllers
                {
                    model = "hr.employee",
                    fields = "[\"id\", \"name\",\"ad_user_employeeID\", \"ad_user_displayName\", \"work_email\", \"job_title\", \"ad_user_sAMAccountName\", \"parent_id\", \"department_id\"]",
-                   search_datas = "[('work_email', '=', '" + email + "')]"
+                   search_datas = "[('work_email', 'ilike', '" + email + "')]"
                })
                .GetStringAsync().Result;
 
@@ -151,7 +192,7 @@ namespace Pizza.BackendAPI.Controllers
                {
                    model = "hr.employee",
                    fields = "[\"id\", \"name\",\"ad_user_employeeID\", \"ad_user_displayName\", \"work_email\", \"job_title\", \"ad_user_sAMAccountName\", \"parent_id\", \"department_id\"]",
-                   search_datas = "[('ad_user_displayName', '=', '" + name + "')]"
+                   search_datas = "[('ad_user_displayName', 'ilike', '" + name + "')]"
                })
                .GetStringAsync().Result;
 
@@ -192,7 +233,7 @@ namespace Pizza.BackendAPI.Controllers
            {
                model = "fih.nbb.group",
                fields = "[\"name\",\"id\"]",
-               search_datas = "[('employee_ids.ad_user_employeeID', '=', '" + empId + "')]"
+               search_datas = "[('employee_ids.ad_user_employeeID', 'ilike', '" + empId + "')]"
            })
            .GetStringAsync().Result;
             var group = JsonConvert.DeserializeObject<dynamic>(res);
@@ -202,6 +243,28 @@ namespace Pizza.BackendAPI.Controllers
                 listGroup.Add(item[0].name.ToString());
             }
             return Ok(listGroup);
+        }
+
+        [HttpGet("head-of-department/{accessToken}/{dept}")]
+        public IActionResult GetHeadOfFuctionID(string accessToken, string dept)
+        {
+            var res = (ADWeb_URI + URI_ADWEB_SEARCH)
+                 .WithOAuthBearerToken(accessToken)
+                 .SetQueryParams(new
+                 {
+                     model = "hr.department",
+                     fields = "[\"id\", \"ad_department_code\", \"manager_id\"]",
+                     search_datas = "[('id', '!=', 21),( 'name', 'ilike', '" + dept + "'),('manager_id', '!=', False)]"
+                 })
+                 .GetStringAsync().Result;
+            var data = JsonConvert.DeserializeObject<List<CommonModel>>(res);
+            if (data.Count == 2 && data[1].data != null)
+            {
+                dynamic obj = data[1].data[0];
+                //return Ok(data[1].data[0]);
+                return Ok((int)obj[0].manager_id[0]);
+            }
+            return null;
         }
     }
 }
