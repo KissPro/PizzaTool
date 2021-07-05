@@ -25,6 +25,8 @@ namespace Pizza.Application.Issue
         Task<bool> RemoveOBAById(Guid id);
         Task<bool> RemoveOBAByIssueId(Guid IssueId);
 
+        Task<TblProduct> GetProductByPSN(string psn);
+
         // Product
         Task<bool> CreateProductTable(TblProduct product);
         Task<TblProduct> GetProductByIssueId(Guid issueId);

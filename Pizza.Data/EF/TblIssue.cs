@@ -22,9 +22,12 @@ namespace Pizza.Data.EF
         public string ProcessType { get; set; }
         public string IssueNo { get; set; }
         public string Title { get; set; }
-        public int? Rpn { get; set; }
+        // hoangnv - 2021.06.16: update by new request
+        public string CarNo { get; set; }
         public string Severity { get; set; }
-        public int? RepeateddSymptom { get; set; }
+        public string RepeatedSymptom { get; set; }
+        public string RepeatedCause { get; set; }
+        // end update
         public string FailureDesc { get; set; }
         public int? FileAttack { get; set; }
         public string NotifiedList { get; set; }

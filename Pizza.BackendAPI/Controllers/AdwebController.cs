@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Microsoft.AspNetCore.Http;
@@ -36,6 +37,10 @@ namespace Pizza.BackendAPI.Controllers
 
             if (!string.IsNullOrEmpty(_configuration["CLIENT_REDIRECT_URL"]))
                 CLIENT_REDIRECT_URL = _configuration["CLIENT_REDIRECT_URL"];
+            //FlurlHttp.Configure(c =>
+            //{
+            //    c.AllowedHttpStatusRange = "100-299,4xx";
+            //});
         }
 
         [HttpGet("token/{_code}")]
@@ -146,16 +151,15 @@ namespace Pizza.BackendAPI.Controllers
         [HttpGet("user-detail-email/{accessToken}/{email}")]
         public IActionResult GetUserDetailByEmail(string accessToken, string email)
         {
-
             var res = (ADWeb_URI + URI_ADWEB_SEARCH)
-               .WithOAuthBearerToken(accessToken)
-               .SetQueryParams(new
-               {
-                   model = "hr.employee",
-                   fields = "[\"id\", \"name\",\"ad_user_employeeID\", \"ad_user_displayName\", \"work_email\", \"job_title\", \"ad_user_sAMAccountName\", \"parent_id\", \"department_id\"]",
-                   search_datas = "[('work_email', 'ilike', '" + email + "')]"
-               })
-               .GetStringAsync().Result;
+           .WithOAuthBearerToken(accessToken)
+           .SetQueryParams(new
+           {
+               model = "hr.employee",
+               fields = "[\"id\", \"name\",\"ad_user_employeeID\", \"ad_user_displayName\", \"work_email\", \"job_title\", \"ad_user_sAMAccountName\", \"parent_id\", \"department_id\"]",
+               search_datas = "[('work_email', 'ilike', '" + email + "')]"
+           })
+           .GetStringAsync().Result;
 
             var data = JsonConvert.DeserializeObject<List<CommonModel>>(res);
             if (data.Count == 2 && data[1].data != null && data[1].data.Count > 0)

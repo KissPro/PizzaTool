@@ -72,5 +72,6 @@ namespace Pizza.BackendAPI.Controllers
     public static class UserRoles
     {
         public const string Admin = "Hanoi_NBB_PIZZA_ADMIN";
+        public const string Controller = "Hanoi_NBB_PIZZA_CONTROLLER";
     }
 }

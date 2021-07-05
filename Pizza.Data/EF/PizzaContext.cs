@@ -259,7 +259,9 @@ namespace Pizza.Data.EF
                 entity.Property(e => e.CreatedBy).HasMaxLength(50);
                 entity.Property(e => e.NotifiedList).HasMaxLength(500);
 
-                entity.Property(e => e.Rpn).HasColumnName("RPN");
+                entity.Property(e => e.CarNo).HasColumnName("CARNo");
+                entity.Property(e => e.RepeatedSymptom).HasMaxLength(10).IsUnicode(false);
+                entity.Property(e => e.RepeatedCause).HasMaxLength(10).IsUnicode(false);
 
                 entity.Property(e => e.Severity)
                     .HasMaxLength(20)
@@ -316,6 +318,24 @@ namespace Pizza.Data.EF
                     .IsUnicode(false);
 
                 entity.Property(e => e.DetectingTime).HasColumnType("datetime");
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+                entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Supervisor)
+                      .HasColumnName("Supervisor")
+                      .HasMaxLength(50);
+                entity.Property(e => e.Auditor)
+                      .HasColumnName("Auditor")
+                      .HasMaxLength(50);
+                entity.Property(e => e.DetectBy)
+                      .HasColumnName("DetectBy")
+                      .HasMaxLength(50);
+                entity.Property(e => e.HowToDetect)
+                      .HasColumnName("HowToDetect")
+                      .HasMaxLength(100);
+                entity.Property(e => e.FailureValidate)
+                      .HasColumnName("FailureValidate")
+                      .HasMaxLength(100);
 
                 entity.Property(e => e.IssueId).HasColumnName("IssueID");
 

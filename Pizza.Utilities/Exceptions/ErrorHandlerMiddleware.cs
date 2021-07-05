@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Flurl.Http;
+using Microsoft.AspNetCore.Http;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -26,24 +27,30 @@ namespace Pizza.Utilities.Exceptions
             {
                 var response = context.Response;
                 response.ContentType = "application/json";
-                switch (error)
+                if (error.InnerException is FlurlHttpException fex)
                 {
-                    case HandleException e:
-                        // custom application error
-                        response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        break;
-                    case KeyNotFoundException e:
-                        // not found error
-                        response.StatusCode = (int)HttpStatusCode.NotFound;
-                        break;
-                    default:
-                        // unhandled error
-                        response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                        break;
+                    response.StatusCode = fex.StatusCode.GetValueOrDefault();
+                }
+                else
+                {
+                    switch (error)
+                    {
+                        case HandleException e:
+                            // custom application error
+                            response.StatusCode = (int)HttpStatusCode.BadRequest;
+                            break;
+                        case KeyNotFoundException e:
+                            // not found error
+                            response.StatusCode = (int)HttpStatusCode.NotFound;
+                            break;
+                        default:
+                            // unhandled error
+                            response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                            break;
+                    }
                 }
                 // Return log
                 var result = JsonSerializer.Serialize(new { message = error?.Message });
-
                 // Log message
                 Log.Error("Something went wrong: " + error?.Message);
                 Log.Error(error?.StackTrace);

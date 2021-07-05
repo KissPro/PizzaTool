@@ -69,7 +69,12 @@ namespace Pizza.BackendAPI.Controllers
                                                    from  sfc_wip_tracking a 
                                                          inner join SFC_WO_INFO b on a.WORK_ORDER = b.wo_no
                                                          left join sfc_wip_station_rec c on a.PID = c.PID
-                                                         where a.PID = (select PID from sfc_wip_sn_ex where sn_value ='" + imei.Trim() + @"')
+                                                         where 
+                                                         (
+                                                              a.PID = (select PID from sfc_wip_sn_ex where sn_value ='" + imei.Trim() + @"') 
+                                                              or
+                                                              a.PID = '" + imei.Trim() + @"'
+                                                         )
                                                          and c.GROUP_NAME = 'LB'
                                                    ) s
                                                 on p.PID = s.PID
@@ -249,6 +254,8 @@ namespace Pizza.BackendAPI.Controllers
             }
         }
 
+
+
         [HttpGet("list-process")]
         public async Task<IActionResult> GetListProcess()
         {
@@ -273,12 +280,18 @@ namespace Pizza.BackendAPI.Controllers
             var product = await _issueService.GetProductByIssueId(issueId);
             return Ok(product);
         }
+        [HttpGet("product-psn/{psn}")]
+        public async Task<IActionResult> GetProductByPSN([FromRoute]string psn)
+        {
+            var product = await _issueService.GetProductByPSN(psn);
+            return Ok(product);
+        }
         [HttpGet("process-name/{processName}")]
         public async Task<IActionResult> GetProcessByName([FromRoute]string processName)
         {
             var process = await _issueService.GetProcessByName(processName);
             return Ok(process);
-        }
+        } 
         [HttpGet("list-verify-issueId/{issueId}")]
         public async Task<IActionResult> GetVerifyFileByIssueId([FromRoute]Guid issueId)
         {

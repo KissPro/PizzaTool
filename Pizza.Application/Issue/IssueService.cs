@@ -42,6 +42,12 @@ namespace Pizza.Application.Issue
             else
             {
                 check.DetectingTime = oba.DetectingTime;
+                check.CreateDate = oba.CreateDate;
+                check.UpdatedDate = oba.UpdatedDate;
+                check.Supervisor = oba.Supervisor;
+                check.Auditor = oba.Auditor;
+                check.HowToDetect = oba.HowToDetect;
+                check.FailureValidate = oba.FailureValidate;
                 check.DefectPart = oba.DefectPart;
                 check.DefectName = oba.DefectName;
                 check.DefectType = oba.DefectType;
@@ -106,9 +112,10 @@ namespace Pizza.Application.Issue
             {
                 check.IssueNo = issue.IssueNo;
                 check.Title = issue.Title;
-                check.Rpn = issue.Rpn;
+                check.CarNo = issue.CarNo;
                 check.Severity = issue.Severity;
-                check.RepeateddSymptom = issue.RepeateddSymptom;
+                check.RepeatedSymptom = issue.RepeatedSymptom;
+                check.RepeatedCause = issue.RepeatedCause;
                 check.FailureDesc = issue.FailureDesc;
                 check.FileAttack = issue.FileAttack;
                 check.NotifiedList = issue.NotifiedList;
@@ -174,7 +181,7 @@ namespace Pizza.Application.Issue
 
         public async Task<List<TblFile>> GetListFileByIssueId(Guid issueId)
         {
-            var listFile = await _context.TblFile.Where(x => x.IssueId == issueId).ToListAsync();
+            var listFile = await _context.TblFile.Where(x => x.IssueId == issueId).OrderBy(x => x.UploadedDate).ToListAsync();
             return listFile;
         }
 
@@ -185,6 +192,7 @@ namespace Pizza.Application.Issue
             await _context.SaveChangesAsync();
             return true;
         }
+
         public async Task<bool> RemoveFileById(Guid id)
         {
             var check = _context.TblFile.Find(id);
@@ -199,7 +207,7 @@ namespace Pizza.Application.Issue
             _context.TblVerification.Remove(check);
             await _context.SaveChangesAsync();
             return true;
-        }       
+        }
         public async Task<bool> RemoveVerificationByIssueId(Guid IssueId)
         {
             var checkList = _context.TblVerification.Where(x => x.IssueId == IssueId);
@@ -212,6 +220,12 @@ namespace Pizza.Application.Issue
         {
             var oba = await _context.TblOba.FirstOrDefaultAsync(x => x.IssueId == issueId);
             return oba;
+        }
+
+        public async Task<TblProduct> GetProductByPSN(string psn)
+        {
+            var product = await _context.TblProduct.FirstOrDefaultAsync(x => x.Psn == psn);
+            return product;
         }
 
         public async Task<TblProduct> GetProductByIssueId(Guid issueId)

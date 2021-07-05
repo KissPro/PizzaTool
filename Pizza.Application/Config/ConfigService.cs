@@ -29,6 +29,7 @@ namespace Pizza.Application.Config
                 check.Name = config.Name;
                 check.Value = config.Value;
                 check.UpdatedBy = config.UpdatedBy;
+                check.DropListRemark = config.DropListRemark;
                 check.UpdateDate = DateTime.Now;
             }
             await _context.SaveChangesAsync();

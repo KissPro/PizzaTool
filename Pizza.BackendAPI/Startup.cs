@@ -96,7 +96,7 @@ namespace Pizza.BackendAPI
             );
             services.AddHangfireServer();
 
-            
+
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
                 {
@@ -129,7 +129,7 @@ namespace Pizza.BackendAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
                 IBackgroundJobClient backgroundJobClient, IRecurringJobManager recurringJobManager,
                 IServiceProvider serviceProvider
         )
