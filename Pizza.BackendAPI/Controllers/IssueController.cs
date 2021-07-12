@@ -57,8 +57,8 @@ namespace Pizza.BackendAPI.Controllers
                         Log.Information("Start transaction");
                         command.Transaction = transaction;
                         command.CommandText = @"
-                                                select p.Sn_Value as IMEI,p.PID as PSN, p.bu as CUSTOMER, s.* from sfc_wip_sn_ex p
-                                                inner join
+                                                select p.Sn_Value as IMEI,s.PID as PSN, p.bu as CUSTOMER, s.* from sfc_wip_sn_ex p
+                                                right join
                                                 (select a.PID,
                                                        a.FAMILY_NAME as Product,
                                                        a.WORK_ORDER as PONNo,

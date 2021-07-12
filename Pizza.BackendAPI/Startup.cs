@@ -92,7 +92,8 @@ namespace Pizza.BackendAPI
                 config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseDefaultTypeSerializer()
-                .UseMemoryStorage()
+                .UseSqlServerStorage(Configuration.GetConnectionString("Pizza"))
+                //.UseMemoryStorage()
             );
             services.AddHangfireServer();
 

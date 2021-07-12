@@ -332,10 +332,10 @@ namespace Pizza.Data.EF
                       .HasMaxLength(50);
                 entity.Property(e => e.HowToDetect)
                       .HasColumnName("HowToDetect")
-                      .HasMaxLength(100);
+                      .HasMaxLength(500);
                 entity.Property(e => e.FailureValidate)
                       .HasColumnName("FailureValidate")
-                      .HasMaxLength(100);
+                      .HasMaxLength(500);
 
                 entity.Property(e => e.IssueId).HasColumnName("IssueID");
 

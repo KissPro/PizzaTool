@@ -213,7 +213,7 @@ namespace Pizza.Application.Assign
             List<string> listScheduleID = new List<string>();
             var timeDeadLine = assign.DeadLine.Subtract(DateTime.Now);
 
-            if (assign.CurrentStep == "containment action")
+            if (assign.CurrentStep == "caca")
             {
                 var jobId = BackgroundJob.Schedule(() => CheckAndSendMail(assign.Id, token, assign.CurrentStep, 1), timeDeadLine);
                 var jobId24 = BackgroundJob.Schedule(() => CheckAndSendMail(assign.Id, token, assign.CurrentStep, 2), timeDeadLine + TimeSpan.FromHours(24));
@@ -222,7 +222,7 @@ namespace Pizza.Application.Assign
                 listScheduleID.Add(jobId24);
                 listScheduleID.Add(jobId48);
             }
-            else if (assign.CurrentStep == "cause analysis")
+            else if (assign.CurrentStep == "caca1")
             {
                 var jobId168 = BackgroundJob.Schedule(() => CheckAndSendMail(assign.Id, token, assign.CurrentStep, 1), timeDeadLine + TimeSpan.FromHours(168));
                 var jobId192 = BackgroundJob.Schedule(() => CheckAndSendMail(assign.Id, token, assign.CurrentStep, 2), timeDeadLine + TimeSpan.FromHours(192));
@@ -231,7 +231,7 @@ namespace Pizza.Application.Assign
                 listScheduleID.Add(jobId192);
                 listScheduleID.Add(jobId216);
             }
-            else if (assign.CurrentStep == "capa")
+            else if (assign.CurrentStep == "capa" || assign.CurrentStep == "close")
             {
                 var jobId192 = BackgroundJob.Schedule(() => CheckAndSendMail(assign.Id, token, assign.CurrentStep, 1), timeDeadLine + TimeSpan.FromHours(192));
                 var jobId216 = BackgroundJob.Schedule(() => CheckAndSendMail(assign.Id, token, assign.CurrentStep, 2), timeDeadLine + TimeSpan.FromHours(216));

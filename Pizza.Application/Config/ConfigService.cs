@@ -13,7 +13,7 @@ namespace Pizza.Application.Config
         private readonly PizzaContext _context;
 
         public ConfigService(PizzaContext context)
-        {
+  {
             _context = context;
         }
 
